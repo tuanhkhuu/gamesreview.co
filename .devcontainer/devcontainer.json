@@ -1,0 +1,57 @@
+{
+  "name": "Ruby on Rails 8",
+  "image": "mcr.microsoft.com/devcontainers/ruby:1-3.3-bookworm",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    }
+  },
+  
+  "runArgs": ["--network=host"],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rebornix.ruby",
+        "Shopify.ruby-lsp",
+        "KoichiSasada.vscode-rdbg",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "ruby.useLanguageServer": true,
+        "ruby.lint": {
+          "rubocop": true
+        },
+        "editor.formatOnSave": true,
+        "rubyLsp.rubyVersionManager": {
+          "identifier": "none"
+        },
+        "rubyLsp.customRubyCommand": "/usr/local/bin/ruby"
+      }
+    }
+  },
+
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Rails Server",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "postCreateCommand": "gem install rails -v '~> 8.0' && gem install bundler && sudo apt-get update && sudo apt-get install -y postgresql-client",
+
+  "remoteUser": "vscode",
+  
+  "mounts": [
+    "source=gamesreview-postgres,target=/var/lib/postgresql/data,type=volume"
+  ]
+}

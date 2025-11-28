@@ -6,6 +6,11 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Set encryption credentials for tests
+  config.active_record.encryption.primary_key = "test_primary_key_for_encryption_in_test_environment_only"
+  config.active_record.encryption.deterministic_key = "test_deterministic_key_for_test_environment_only"
+  config.active_record.encryption.key_derivation_salt = "test_salt_for_key_derivation_in_test_only"
+
   # While tests run files are not watched, reloading is not necessary.
   config.enable_reloading = false
 

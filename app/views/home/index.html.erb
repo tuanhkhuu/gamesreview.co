@@ -1,0 +1,19 @@
+<p style="color: green"><%= notice %></p>
+
+<p>Signed as <%= Current.user.email %></p>
+
+<h2>Connected Accounts</h2>
+
+<div>
+  <%= link_to "Manage connected accounts", oauth_identities_path %>
+</div>
+
+<h2>Access history</h2>
+
+<div>
+  <%= link_to "Devices & Sessions", sessions_path %>
+</div>
+
+<br>
+
+<%= button_to "Log out", Current.session, method: :delete %>

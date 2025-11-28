@@ -28,14 +28,16 @@ class OauthIdentitiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get oauth_identities_url, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    get oauth_identities_url
 
     assert_response :success
     assert_select "h1", "Connected Accounts"
   end
 
   test "should show all connected identities" do
-    get oauth_identities_url, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    get oauth_identities_url
 
     assert_response :success
     # Check that both providers are shown
@@ -45,7 +47,8 @@ class OauthIdentitiesControllerTest < ActionDispatch::IntegrationTest
 
   test "should show available providers" do
     # User has Google and Twitter, so Facebook should be available
-    get oauth_identities_url, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    get oauth_identities_url
 
     assert_response :success
     assert_match /Facebook/, response.body
@@ -53,8 +56,9 @@ class OauthIdentitiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy identity when user has multiple" do
-    assert_difference "OauthIdentity.count", -1 do
-      delete oauth_identity_url(@google_identity), headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    assert_difference("OauthIdentity.count", -1) do
+      delete oauth_identity_url(@google_identity)
     end
 
     assert_redirected_to oauth_identities_path
@@ -65,8 +69,9 @@ class OauthIdentitiesControllerTest < ActionDispatch::IntegrationTest
     # Delete one identity first
     @twitter_identity.destroy
 
+    sign_in_as(@user)
     assert_no_difference "OauthIdentity.count" do
-      delete oauth_identity_url(@google_identity), headers: { "X-Test-User-Id" => @user.id }
+      delete oauth_identity_url(@google_identity)
     end
 
     assert_redirected_to oauth_identities_path
@@ -86,8 +91,9 @@ class OauthIdentitiesControllerTest < ActionDispatch::IntegrationTest
       access_token: "other_token"
     )
 
+    sign_in_as(@user)
     assert_no_difference "OauthIdentity.count" do
-      delete oauth_identity_url(other_identity), headers: { "X-Test-User-Id" => @user.id }
+      delete oauth_identity_url(other_identity)
     end
 
     assert_redirected_to oauth_identities_path

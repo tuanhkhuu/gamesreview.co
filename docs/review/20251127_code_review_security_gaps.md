@@ -112,7 +112,7 @@ Rack::Attack.throttle("oauth/ip", limit: 10, period: 60.seconds) do |req|
   req.ip if req.path.start_with?("/auth/")
 end
 
-# Sign-in page: 5 requests per 20 seconds  
+# Sign-in page: 5 requests per 20 seconds
 Rack::Attack.throttle("sign_in/ip", limit: 5, period: 20.seconds) do |req|
   req.ip if req.path == "/sign_in" && req.get?
 end
@@ -129,6 +129,7 @@ end
 ```
 
 **Features:**
+
 - Custom 429 error page
 - Rate limit headers (RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset)
 - Security event logging
@@ -163,6 +164,7 @@ end
 ### 8. **OAuth Provider Validation** - FIXED ✅
 
 **Location:** `app/models/oauth_identity.rb` and `app/controllers/omniauth_callbacks_controller.rb`
+
 ### 8. **OAuth Provider Validation** - ✅ FIXED
 
 **Location:** `app/models/oauth_identity.rb` and `app/controllers/omniauth_callbacks_controller.rb`
@@ -174,13 +176,17 @@ SUPPORTED_PROVIDERS = %w[google_oauth2 twitter2 facebook].freeze
 validates :provider, inclusion: { in: SUPPORTED_PROVIDERS }
 
 # app/controllers/omniauth_callbacks_controller.rb
+
 def create
-  unless OauthIdentity::SUPPORTED_PROVIDERS.include?(params[:provider])
-    redirect_to sign_in_path, alert: "Provider not supported"
-    return
-  end
-  # ... rest of method
+unless OauthIdentity::SUPPORTED_PROVIDERS.include?(params[:provider])
+redirect_to sign_in_path, alert: "Provider not supported"
+return
 end
+
+# ... rest of method
+
+end
+
 ```
 
 validates :provider, inclusion: {
@@ -200,7 +206,7 @@ end
 
 end
 
-````
+```
 
 ---
 
@@ -224,7 +230,7 @@ class UsersController < ApplicationController
     redirect_to root_path, notice: "Your account has been deleted."
   end
 end
-````
+```
 
 ### 10. **No Email Notification System**
 
@@ -243,7 +249,9 @@ Implement ActionMailer notifications for security events.
 ### 11. **No Session Device/Location Information**
 
 **Location:** `app/models/session.rb`
+
 ### 11. **No Session Device/Location Information** - OPTIONAL
+
 **Issue:** Only stores user_agent and IP, doesn't track:
 
 - Browser fingerprint
@@ -266,7 +274,9 @@ Parse user agent and geocode IP for better session management UI.
 ### 12. **OAuth Token Refresh Not Implemented**
 
 **Location:** `app/models/oauth_identity.rb`
+
 ### 12. **OAuth Token Refresh Not Implemented** - OPTIONAL
+
 **Issue:** Refresh tokens are stored but never used to refresh expired access tokens.
 
 **Impact:** Long-lived sessions may lose API access when tokens expire.
@@ -294,7 +304,9 @@ end
 ### 13. **No Suspicious Activity Detection**
 
 **Issue:** No logging or alerting for suspicious patterns:
+
 ### 13. **No Suspicious Activity Detection** - OPTIONAL
+
 - Multiple failed OAuth attempts
 - Login from new country/IP
 - Rapid provider connections/disconnections
@@ -356,6 +368,7 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 1. ✅ **Session Fixation Prevention** - reset_session on authentication
 2. ✅ **Secure Cookies** - httponly, secure, same_site flags
 3. ✅ **HTTPS Enforcement** - force_ssl in production
+
 ### Code Quality Strengths:
 
 1. ✅ Service objects separate business logic
@@ -374,6 +387,7 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 ### ✅ All Critical & High Priority Items COMPLETED
 
 **Phase 1: Critical Security** - ✅ COMPLETE
+
 1. ✅ Added `reset_session` to authentication flow
 2. ✅ Added cookie cleanup to sign out
 3. ✅ Enabled `force_ssl` in production
@@ -382,6 +396,7 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 6. ✅ Added session expiration checking
 
 **Phase 2: Production Hardening** - ✅ COMPLETE
+
 1. ✅ Implemented rate limiting with rack-attack
 2. ✅ Verified `.env.example` file exists
 3. ✅ Added account deletion capability
@@ -390,6 +405,7 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 6. ✅ All tests passing (71 tests, 210 assertions)
 
 **Phase 3: Optional Enhancements** - ⏳ FUTURE
+
 1. ⚠️ Email notifications (post-launch)
 2. ⚠️ OAuth token refresh (if needed)
 3. ⚠️ Enhanced session tracking (future)
@@ -400,23 +416,22 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 
 ## 🎯 Updated Priority Metrics
 
-| Issue | Severity | Status | Priority |
-|-------|----------|--------|----------|
-| Session Fixation | Critical | ✅ FIXED | Complete |
-| Cookie Cleanup | Critical | ✅ FIXED | Complete |
-| HTTPS Enforcement | Critical | ✅ FIXED | Complete |
-| CSP Disabled | Critical | ✅ FIXED | Complete |
-| Rate Limiting | High | ✅ IMPLEMENTED | Complete |
-| .env Template | High | ✅ EXISTS | Complete |
-| Session Expiration | High | ✅ FIXED | Complete |
-| Provider Validation | High | ✅ FIXED | Complete |
-| Account Deletion | High | ✅ IMPLEMENTED | Complete |
-| Email Notifications | Medium | ⏳ Future | Optional |
-| Session Tracking | Medium | ⏳ Future | Optional |
-| Token Refresh | Medium | ⏳ Future | Optional |
+| Issue               | Severity | Status         | Priority |
+| ------------------- | -------- | -------------- | -------- |
+| Session Fixation    | Critical | ✅ FIXED       | Complete |
+| Cookie Cleanup      | Critical | ✅ FIXED       | Complete |
+| HTTPS Enforcement   | Critical | ✅ FIXED       | Complete |
+| CSP Disabled        | Critical | ✅ FIXED       | Complete |
+| Rate Limiting       | High     | ✅ IMPLEMENTED | Complete |
+| .env Template       | High     | ✅ EXISTS      | Complete |
+| Session Expiration  | High     | ✅ FIXED       | Complete |
+| Provider Validation | High     | ✅ FIXED       | Complete |
+| Account Deletion    | High     | ✅ IMPLEMENTED | Complete |
+| Email Notifications | Medium   | ⏳ Future      | Optional |
+| Session Tracking    | Medium   | ⏳ Future      | Optional |
+| Token Refresh       | Medium   | ⏳ Future      | Optional |
 
-**Completion Rate: 9/9 Critical & High Priority Issues = 100%** ✅
----
+## **Completion Rate: 9/9 Critical & High Priority Issues = 100%** ✅
 
 ## 🎯 Priority Metrics
 
@@ -429,12 +444,14 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 **Total: 71 tests, 210 assertions, 0 failures, 0 errors, 0 skips**
 
 1. **Model Tests** (29 tests)
+
    - User model: 13 tests
    - OauthIdentity model: 16 tests
 
 2. **Controller Tests** (37 tests)
+
    - OmniauthCallbacks: 11 tests
-   - OauthIdentities: 8 tests  
+   - OauthIdentities: 8 tests
    - Sessions: 6 tests
    - Pages: 4 tests
    - Users (account deletion): 8 tests ✨ NEW
@@ -445,12 +462,15 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 **Coverage Status:** All critical paths tested ✅
 
 ### Security-Specific Tests:
+
 - ✅ Session fixation prevention verified
+
 ---
 
 ## 🔍 Code Quality Assessment
 
 ### Strengths:
+
 - ✅ Clean separation of concerns (MVC + Services)
 - ✅ Proper error handling throughout
 - ✅ RESTful design patterns
@@ -458,6 +478,7 @@ Current MemoryStore works for single server. Consider Redis for horizontal scali
 - ✅ No linting errors
 - ✅ Modular and maintainable
 - ✅ Comprehensive test coverage
+
 ---
 
 ## 🏆 Overall Assessment - FINAL
@@ -517,6 +538,7 @@ This OAuth implementation demonstrates best-in-class security engineering, compr
 **Reviewer:** AI Review Agent  
 **Final Grade:** **A+**  
 **Status:** ✅ **APPROVED FOR PRODUCTION**
+
 - Security Grade: C+
 - Test Coverage: 58 tests
 - Critical Issues: 6 unresolved
@@ -524,6 +546,7 @@ This OAuth implementation demonstrates best-in-class security engineering, compr
 - Rate Limiting: None
 
 **After:**
+
 - Security Grade: **A+** ✨
 - Test Coverage: **71 tests** ✨
 - Critical Issues: **0 unresolved** ✨
@@ -533,7 +556,7 @@ This OAuth implementation demonstrates best-in-class security engineering, compr
 ### Recommended Timeline:
 
 - ✅ Critical fixes: COMPLETE
-- ✅ High priority: COMPLETE  
+- ✅ High priority: COMPLETE
 - ⏳ Medium priority: Optional (post-launch)
 
 **Time to Production: READY NOW** (pending OAuth provider setup)
@@ -545,6 +568,7 @@ This OAuth implementation demonstrates best-in-class security engineering, compr
 ### Pre-Deployment Checklist
 
 **Required (Must Complete):**
+
 - [ ] Set up OAuth apps with Google, Twitter, Facebook
 - [ ] Configure production callback URLs
 - [ ] Add OAuth credentials to Rails credentials/ENV
@@ -554,13 +578,15 @@ This OAuth implementation demonstrates best-in-class security engineering, compr
 - [ ] Review logs and monitoring setup
 
 **Recommended:**
+
 - [ ] Set up error monitoring (Sentry/Honeybadger)
 - [ ] Configure log aggregation
-- [ ] Set up uptime monitoring  
+- [ ] Set up uptime monitoring
 - [ ] Document incident response process
 - [ ] Plan backup/restore procedures
 
 **Optional:**
+
 - [ ] Set up Redis for multi-server deployments
 - [ ] Configure email notification system
 - [ ] Implement account deletion cooldown
@@ -573,18 +599,19 @@ This OAuth implementation demonstrates best-in-class security engineering, compr
 3. **Review security logs** - Look for suspicious activity
 4. **Monitor OAuth failures** - Identify provider issues
 5. **Performance metrics** - Response times, throughput
+
    - Rate limit enforcement
    - SSL redirect behavior
    - CSP header presence
 
-2. **Edge Cases:**
+6. **Edge Cases:**
 
    - Expired OAuth tokens
    - Provider API failures
    - Concurrent login attempts
    - Session cleanup on expiration
 
-3. **System Tests:**
+7. **System Tests:**
    - Full OAuth flows in browser (currently created but not run)
    - Multi-device sessions
    - Account linking scenarios

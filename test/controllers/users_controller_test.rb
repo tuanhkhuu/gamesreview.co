@@ -28,7 +28,8 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     oauth_identity_count = OauthIdentity.count
 
     # Make authenticated request
-    delete account_path, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    delete account_path
 
     # Verify user was deleted
     assert_equal user_count - 1, User.count
@@ -59,7 +60,8 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal 3, @user.oauth_identities.count
 
-    delete account_path, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    delete account_path
 
     # Verify all OAuth identities are deleted
     assert_equal 0, OauthIdentity.where(user_id: @user.id).count
@@ -72,14 +74,16 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal 3, @user.sessions.count
 
-    delete account_path, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    delete account_path
 
     # Verify all sessions are deleted
     assert_equal 0, Session.where(user_id: @user.id).count
   end
 
   test "should clear cookies and reset session on account deletion" do
-    delete account_path, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    delete account_path
 
     # Verify session was reset and redirected
     assert_redirected_to root_path
@@ -94,8 +98,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     # In a real scenario, you might want to check actual log output
     # For now, we just ensure the deletion completes without errors
 
+    sign_in_as(@user)
     assert_nothing_raised do
-      delete account_path, headers: { "X-Test-User-Id" => @user.id }
+      delete account_path
     end
 
     assert_response :redirect
@@ -104,8 +109,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   test "should handle deletion of user with no oauth identities" do
     @user.oauth_identities.destroy_all
 
+    sign_in_as(@user)
     assert_nothing_raised do
-      delete account_path, headers: { "X-Test-User-Id" => @user.id }
+      delete account_path
     end
 
     assert_nil User.find_by(id: @user.id)
@@ -115,8 +121,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   test "should handle deletion of user with no sessions" do
     @user.sessions.destroy_all
 
+    sign_in_as(@user)
     assert_nothing_raised do
-      delete account_path, headers: { "X-Test-User-Id" => @user.id }
+      delete account_path
     end
 
     assert_nil User.find_by(id: @user.id)

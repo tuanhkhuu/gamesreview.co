@@ -22,7 +22,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get sessions index when authenticated" do
-    get sessions_url, headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    get sessions_url
     assert_response :success
   end
 
@@ -38,8 +39,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       ip_address: "127.0.0.99"
     )
 
-    # Make the DELETE request - this will create a "Test Authentication" session via header
-    delete session_url(session_to_delete), headers: { "X-Test-User-Id" => @user.id }
+    sign_in_as(@user)
+    delete session_url(session_to_delete)
 
     # Verify the session_to_delete was actually deleted
     assert_nil Session.find_by(id: session_to_delete.id)
@@ -68,9 +69,9 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       ip_address: "127.0.0.3"
     )
 
-    # Try to delete another user's session
-    # In integration tests, RecordNotFound becomes 404 response
-    delete session_url(other_session), headers: { "X-Test-User-Id" => @user.id }
+    # Sign in as @user but try to delete another user's session
+    sign_in_as(@user)
+    delete session_url(other_session)
 
     # Should get 404 Not Found
     assert_response :not_found

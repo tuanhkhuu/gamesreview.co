@@ -25,15 +25,48 @@ class ActiveSupport::TestCase
   end
 
   # Add more helper methods to be used by all tests here...
+
+  # Sign in a user for integration tests
+  # This uses the actual OAuth callback flow to set cookies properly
   def sign_in_as(user)
-    session_record = user.sessions.create!(
-      user_agent: "Test Browser",
-      ip_address: "127.0.0.1"
+    # Ensure user has an OAuth identity
+    identity = user.oauth_identities.first_or_create!(
+      provider: "google_oauth2",
+      uid: "test_uid_#{user.id}",
+      access_token: "test_token"
     )
-    # For controller/integration tests, set Current.session directly
-    # This bypasses the cookie authentication
-    Current.session = session_record
+
+    # Set up OmniAuth mock for this user
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+      provider: "google_oauth2",
+      uid: identity.uid,
+      info: {
+        email: user.email,
+        name: user.name,
+        image: user.avatar_url,
+        email_verified: user.email_verified
+      },
+      credentials: {
+        token: identity.access_token,
+        refresh_token: "test_refresh",
+        expires_at: 1.hour.from_now.to_i
+      }
+    })
+
+    # Trigger the OAuth callback - this will set the session cookie properly
+    get "/auth/google_oauth2/callback"
+
+    # Follow the redirect to complete the sign-in
+    follow_redirect! if response.redirect?
+
     user
+  end
+
+  # Sign out the current user
+  def sign_out
+    cookies.delete(:session_token)
+    Current.session = nil
   end
 
   # OmniAuth test helpers

@@ -151,7 +151,7 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should link identity to existing user" do
-    identity = @user.oauth_identities.create!(
+    @user.oauth_identities.create!(
       provider: "google_oauth2",
       uid: "existing_uid",
       access_token: "old_token"

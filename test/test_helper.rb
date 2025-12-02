@@ -12,11 +12,6 @@ class ActiveSupport::TestCase
   # Don't use fixtures - we create data in tests
   # fixtures :all
 
-  # Clean database between tests
-  parallelize_setup do |worker|
-    ActiveRecord::Base.connection.execute("TRUNCATE users, oauth_identities, sessions RESTART IDENTITY CASCADE")
-  end
-
   setup do
     # Clear all data before each test
     OauthIdentity.delete_all

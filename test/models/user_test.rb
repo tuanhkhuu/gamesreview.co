@@ -50,6 +50,42 @@ class UserTest < ActiveSupport::TestCase
     assert_respond_to @user, :oauth_identities
   end
 
+  test "should have many user_reviews" do
+    assert_respond_to @user, :user_reviews
+  end
+
+  test "should default role to user" do
+    new_user = User.create!(email: "newuser@example.com", email_verified: true)
+    assert new_user.user?
+    assert_equal "user", new_user.role
+  end
+
+  test "should have role enum" do
+    @user.role = :moderator
+    assert @user.moderator?
+
+    @user.role = :admin
+    assert @user.admin?
+
+    @user.role = :user
+    assert @user.user?
+  end
+
+  test "moderator_or_admin? should return true for moderators" do
+    @user.role = :moderator
+    assert @user.moderator_or_admin?
+  end
+
+  test "moderator_or_admin? should return true for admins" do
+    @user.role = :admin
+    assert @user.moderator_or_admin?
+  end
+
+  test "moderator_or_admin? should return false for regular users" do
+    @user.role = :user
+    assert_not @user.moderator_or_admin?
+  end
+
   test "should destroy oauth_identities when user is destroyed" do
     identity = @user.oauth_identities.create!(
       provider: "google_oauth2",

@@ -22,7 +22,7 @@
 
     </div>
     <p>
-      <%= button_to "Log out", session, method: :delete %>
+      <%= render "shared/logout_button", session: session %>
     </p>
   <% end %>
 </div>

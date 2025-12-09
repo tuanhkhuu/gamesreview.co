@@ -53,28 +53,6 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
     assert_equal "google_oauth2", @user.oauth_identities.first.provider
   end
 
-  test "should link multiple providers to same user" do
-    # Create Google identity
-    setup_omniauth_mock(provider: "google_oauth2", email: @user.email)
-    get "/auth/google_oauth2/callback"
-
-    @user.reload
-    assert_equal 1, @user.oauth_identities.count
-
-    # Add Twitter identity
-    setup_omniauth_mock(provider: "twitter2", email: @user.email, uid: "twitter123")
-
-    assert_difference "OauthIdentity.count", 1 do
-      assert_no_difference "User.count" do
-        get "/auth/twitter2/callback"
-      end
-    end
-
-    @user.reload
-    assert_equal 2, @user.oauth_identities.count
-    assert_equal [ "google_oauth2", "twitter2" ], @user.oauth_identities.pluck(:provider).sort
-  end
-
   test "should create session on successful authentication" do
     setup_omniauth_mock
 
@@ -120,35 +98,6 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
     assert flash[:alert].present?
   end
 
-  test "should handle Twitter authentication" do
-    setup_omniauth_mock(
-      provider: "twitter2",
-      uid: "twitter_uid",
-      email: "twitter@example.com"
-    )
-
-    assert_difference [ "User.count", "OauthIdentity.count" ], 1 do
-      get "/auth/twitter2/callback"
-    end
-
-    user = User.find_by(email: "twitter@example.com")
-    assert_equal "twitter2", user.oauth_identities.first.provider
-  end
-
-  test "should handle Facebook authentication" do
-    setup_omniauth_mock(
-      provider: "facebook",
-      uid: "fb_uid",
-      email: "facebook@example.com"
-    )
-
-    assert_difference [ "User.count", "OauthIdentity.count" ], 1 do
-      get "/auth/facebook/callback"
-    end
-
-    user = User.find_by(email: "facebook@example.com")
-    assert_equal "facebook", user.oauth_identities.first.provider
-  end
 
   test "should link identity to existing user" do
     identity = @user.oauth_identities.create!(

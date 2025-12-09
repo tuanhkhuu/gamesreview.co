@@ -39,6 +39,11 @@ module GamesreviewCo
     # Enable Rack::Attack middleware for rate limiting
     config.middleware.use Rack::Attack
 
+    # Active Record Encryption
+    config.active_record.encryption.primary_key = ENV["ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY"]
+    config.active_record.encryption.deterministic_key = ENV["ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY"]
+    config.active_record.encryption.key_derivation_salt = ENV["ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT"]
+
     # Don't generate system test files.
     config.generators.system_tests = nil
   end

@@ -15,11 +15,6 @@ class FixMissingConstraintsAndIndexes < ActiveRecord::Migration[8.1]
     # Set default for platforms.active
     change_column_default :platforms, :active, true
 
-    # Add missing unique indexes
-    add_index :genres, :name, unique: true
-    add_index :platforms, :name, unique: true
-    add_index :publishers, :name, unique: true
-
     # Add missing performance indexes for games
     add_index :games, :metascore
     add_index :games, :user_score

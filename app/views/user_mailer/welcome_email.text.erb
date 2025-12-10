@@ -1,0 +1,20 @@
+Welcome to GamesReview.com!
+
+Hello <%= @user.email.split('@').first.capitalize %>!
+
+Thank you for joining GamesReview.com, your go-to destination for comprehensive game reviews and ratings.
+
+Here's what you can do with your account:
+
+• Browse thousands of game reviews from critics and players
+• Write your own reviews and share your gaming experiences
+• Track games you're interested in or have played
+• Discover new games based on your preferences
+
+We're excited to have you as part of our gaming community!
+
+Start exploring games: <%= @login_url %>
+
+---
+You're receiving this email because you created an account on GamesReview.com
+© <%= Time.current.year %> GamesReview.com. All rights reserved.

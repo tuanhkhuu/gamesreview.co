@@ -46,9 +46,10 @@ gem "image_processing", "~> 1.2"
 gem "authentication-zero", "~> 4.0"
 gem "omniauth", "~> 2.1"
 gem "omniauth-google-oauth2", "~> 1.1"
-gem "omniauth-twitter2", "~> 0.1"
-gem "omniauth-facebook", "~> 10.0"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
+
+# Authorization
+gem "pundit", "~> 2.4"
 
 # Rate Limiting & Security
 gem "rack-attack", "~> 6.7"
@@ -70,4 +71,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Preview email in the browser instead of sending it
+  gem "letter_opener", "~> 1.10"
 end

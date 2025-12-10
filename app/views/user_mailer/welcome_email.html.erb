@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background-color: #4F46E5; color: white; padding: 20px; text-align: center; }
+      .content { background-color: #f9fafb; padding: 30px; }
+      .button { display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px; margin-top: 20px; }
+      .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Welcome to GamesReview.com!</h1>
+      </div>
+      
+      <div class="content">
+        <h2>Hello <%= @user.email.split('@').first.capitalize %>!</h2>
+        
+        <p>Thank you for joining GamesReview.com, your go-to destination for comprehensive game reviews and ratings.</p>
+        
+        <p>Here's what you can do with your account:</p>
+        <ul>
+          <li>Browse thousands of game reviews from critics and players</li>
+          <li>Write your own reviews and share your gaming experiences</li>
+          <li>Track games you're interested in or have played</li>
+          <li>Discover new games based on your preferences</li>
+        </ul>
+        
+        <p>We're excited to have you as part of our gaming community!</p>
+        
+        <a href="<%= @login_url %>" class="button">Start Exploring Games</a>
+      </div>
+      
+      <div class="footer">
+        <p>You're receiving this email because you created an account on GamesReview.com</p>
+        <p>&copy; <%= Time.current.year %> GamesReview.com. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

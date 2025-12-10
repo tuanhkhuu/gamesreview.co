@@ -357,7 +357,7 @@ User-generated game reviews with moderation.
 - `title` (string, 5-100 chars, required)
 - `body` (text, 50-5000 chars, required)
 - `score` (decimal, 0-10, required)
-- `playtime_hours` (integer, optional)
+- `hours_played` (integer, optional)
 - `completion_status` (enum, optional) - not_completed/completed/100_percent
 - `moderation_status` (enum, default: pending) - pending/approved/flagged/rejected
 - `moderated_at` (datetime, optional)
@@ -398,7 +398,7 @@ review = UserReview.create!(
   title: "Masterpiece of Game Design",
   body: "Elden Ring combines the best elements..." * 10,
   score: 9.5,
-  playtime_hours: 120,
+  hours_played: 120,
   completion_status: :completed
 )
 ```

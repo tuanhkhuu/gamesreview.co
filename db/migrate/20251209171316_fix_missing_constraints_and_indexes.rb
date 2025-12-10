@@ -24,8 +24,5 @@ class FixMissingConstraintsAndIndexes < ActiveRecord::Migration[8.1]
     add_index :games, :metascore
     add_index :games, :user_score
     add_index :games, :release_date
-
-    # Add missing composite index for game_platforms
-    add_index :game_platforms, [ :game_id, :platform_id ], unique: true
   end
 end

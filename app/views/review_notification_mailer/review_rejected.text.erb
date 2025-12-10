@@ -1,0 +1,22 @@
+Review Status Update
+
+Hello <%= @user.email.split('@').first.capitalize %>,
+
+We regret to inform you that your review of <%= @game.title %> did not meet our community guidelines and could not be approved.
+
+Review:
+<%= @review.title %>
+<%= truncate(@review.body, length: 200) %>
+
+Common reasons for rejection include:
+• Inappropriate language or content
+• Spam or promotional content
+• Off-topic or irrelevant comments
+• Violation of our review guidelines
+
+Please review our guidelines and feel free to submit a new review that adheres to our standards.
+
+Read review guidelines: <%= @guidelines_url %>
+
+---
+© <%= Time.current.year %> GamesReview.com. All rights reserved.

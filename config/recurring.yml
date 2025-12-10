@@ -9,7 +9,26 @@
 #     priority: 2
 #     schedule: at 5am every day
 
+development:
+  # Clear finished Solid Queue jobs every 6 hours in development
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every 6 hours
+
 production:
+  # Clear finished Solid Queue jobs every hour
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
+
+  # Update game metascores daily at 3am
+  update_game_metascores:
+    class: GameMetascoreUpdateJob
+    queue: background
+    schedule: at 3am every day
+
+  # Process pending reviews for auto-approval weekly
+  auto_approve_reviews:
+    class: ReviewAutoApprovalJob
+    queue: background
+    schedule: at 2am every sunday

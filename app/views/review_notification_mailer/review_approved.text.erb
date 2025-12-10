@@ -1,0 +1,18 @@
+Review Approved!
+
+Great news, <%= @user.email.split('@').first.capitalize %>!
+
+Your review of <%= @game.title %> has been approved and is now live on GamesReview.com.
+
+Review Details:
+Title: <%= @review.title %>
+Your Score: <%= @review.score %>/10
+
+<%= truncate(@review.body, length: 200) %>
+
+Thank you for contributing to our gaming community! Your insights help other gamers make informed decisions.
+
+View your review: <%= @review_url %>
+
+---
+© <%= Time.current.year %> GamesReview.com. All rights reserved.

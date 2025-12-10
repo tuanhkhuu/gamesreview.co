@@ -1,0 +1,18 @@
+Review Under Moderation
+
+Hello <%= @user.email.split('@').first.capitalize %>,
+
+Your review of <%= @game.title %> has been flagged for moderation review by our community or moderators.
+
+Review:
+<%= @review.title %>
+<%= truncate(@review.body, length: 200) %>
+
+Our moderation team will review your content to ensure it complies with our community guidelines. This is a standard process and doesn't necessarily mean your review violated any rules.
+
+If your review is found to comply with our guidelines, it will be approved and published. Otherwise, we may contact you with specific feedback.
+
+Review community guidelines: <%= @guidelines_url %>
+
+---
+© <%= Time.current.year %> GamesReview.com. All rights reserved.
